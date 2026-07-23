@@ -5,14 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SubVision | Next-Generation Cyber Intelligence & Subdomain Discovery</title>
   <meta name="description" content="Discover hidden infrastructure and uncover every public subdomain with enterprise-grade cyber intelligence and AI-powered scanning.">
-  <link rel="canonical" href="https://subvision.vercel.app/">
+  <link rel="canonical" href="https://sub-vision.vercel.app/">
   
-  <!-- Open Graph -->
-  <meta property="og:title" content="SubVision | Enterprise Cyber Intelligence">
-  <meta property="og:description" content="Discover Every Subdomain. Secure Every Asset.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://subvision.vercel.app/">
-
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%2305070A' stroke='%2300F5FF' stroke-width='6'/><circle cx='50' cy='50' r='25' fill='none' stroke='%236E5BFF' stroke-width='4' stroke-dasharray='10 5'/><circle cx='50' cy='50' r='10' fill='%2300F5FF'/></svg>">
   
@@ -23,71 +17,52 @@
   
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
-  
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
-  <!-- Cyber Background Effects -->
   <div class="cyber-grid"></div>
   <div class="aurora-glow"></div>
 
-  <!-- Header / Navbar -->
   <header class="navbar">
     <a href="#" class="nav-brand">
       <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="45" stroke="#00F5FF" stroke-width="6" stroke-dasharray="283" stroke-dashoffset="50"/>
-        <circle cx="50" cy="50" r="30" stroke="#6E5BFF" stroke-width="4" stroke-dasharray="10 5"/>
+        <circle cx="50" cy="50" r="45" stroke="#00F5FF" stroke-width="6"/>
         <circle cx="50" cy="50" r="12" fill="#00F5FF"/>
-        <path d="M50 5 L50 20 M50 80 L50 95 M5 50 L20 50 M80 50 L95 50" stroke="#00F5FF" stroke-width="4" stroke-linecap="round"/>
       </svg>
       SubVision
     </a>
     <div class="nav-status">
       <div class="status-dot"></div>
-      <span>Neural API: Operational (24ms)</span>
+      <span>Neural API: Operational</span>
     </div>
   </header>
 
-  <!-- Hero Section -->
   <section class="hero-section" id="heroSection">
-    <div class="badge-pill">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-      Enterprise Cyber Intelligence Platform v4.5
-    </div>
+    <div class="badge-pill">Enterprise Cyber Intelligence v4.5</div>
     <h1 class="hero-title">Discover Every Subdomain. <span>Secure Every Asset.</span></h1>
-    <p class="hero-subtitle">Uncover hidden infrastructure and map complete attack surfaces using advanced RapidAPI security intelligence and real-time neural enumeration.</p>
+    <p class="hero-subtitle">Uncover hidden infrastructure and map complete attack surfaces using advanced RapidAPI security intelligence.</p>
 
-    <!-- Search Card -->
     <div class="search-card">
       <form class="search-form" id="searchForm">
         <div class="input-wrapper">
           <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           <input type="text" id="domainInput" class="domain-input" placeholder="example.com" autocomplete="off" spellcheck="false">
         </div>
-        <button type="submit" class="scan-btn">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-          Start Scan
-        </button>
+        <button type="submit" class="scan-btn">Start Scan</button>
       </form>
       <div class="validation-error" id="validationError"></div>
     </div>
 
-    <!-- Quick Tags -->
     <div class="quick-tags">
       <span class="tag-label">Try target:</span>
       <button class="domain-tag" data-domain="tesla.com">tesla.com</button>
       <button class="domain-tag" data-domain="apple.com">apple.com</button>
       <button class="domain-tag" data-domain="github.com">github.com</button>
-      <button class="domain-tag" data-domain="cloudflare.com">cloudflare.com</button>
     </div>
   </section>
 
-  <!-- Scanning Screen Overlay -->
   <section class="scanning-overlay" id="scanningOverlay">
     <div class="radar-spinner">
-      <div class="radar-circle"></div>
       <div class="radar-circle"></div>
       <div class="radar-core"></div>
     </div>
@@ -95,7 +70,6 @@
     <div class="scanning-subtext">Executing secure proxy request through RapidAPI Subdomain Engine</div>
   </section>
 
-  <!-- Results Dashboard -->
   <section class="dashboard-section" id="dashboardSection">
     <div class="dashboard-header">
       <div class="target-heading">
@@ -103,22 +77,12 @@
         <p id="targetDomainSubtitle">Intelligence report generated successfully</p>
       </div>
       <div class="dashboard-actions">
-        <button class="action-btn" onclick="downloadJSON()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          Download JSON
-        </button>
-        <button class="action-btn" onclick="exportCSV()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-          Export CSV
-        </button>
-        <button class="action-btn primary" onclick="newScan()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          New Scan
-        </button>
+        <button class="action-btn" onclick="downloadJSON()">Download JSON</button>
+        <button class="action-btn" onclick="exportCSV()">Export CSV</button>
+        <button class="action-btn primary" onclick="newScan()">🔍 Scan Another Site</button>
       </div>
     </div>
 
-    <!-- Statistics Grid -->
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-title">Total Subdomains</div>
@@ -136,13 +100,8 @@
         <div class="stat-title">Scan Duration</div>
         <div class="stat-value" id="statDuration">0.0s</div>
       </div>
-      <div class="stat-card danger">
-        <div class="stat-title">API Latency</div>
-        <div class="stat-value" id="statLatency">0ms</div>
-      </div>
     </div>
 
-    <!-- Subdomains Table -->
     <div class="subdomain-container">
       <table class="subdomain-table">
         <thead>
@@ -154,80 +113,54 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody id="subTableBody">
-          <!-- Populated dynamically -->
-        </tbody>
+        <tbody id="subTableBody"></tbody>
       </table>
     </div>
 
-    <!-- Developer JSON Console -->
     <div class="console-section">
       <div class="console-header">
-        <div class="console-title">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-          Secure API Response Console
-        </div>
+        <div class="console-title">Secure API Response Console</div>
         <button class="action-btn" onclick="copyAllJSON()">Copy JSON</button>
       </div>
       <pre class="json-output"><code id="jsonOutput">// Scan payload will appear here...</code></pre>
     </div>
-  </section>
 
-  <!-- Features Section -->
-  <section class="section-container">
-    <h2 class="section-title">Engineered for Elite Security Teams</h2>
-    <p class="section-subtitle">Combining cutting-edge threat intelligence with lightning-fast cloud architecture.</p>
-    
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        </div>
-        <h3>RapidAPI Powered</h3>
-        <p>Leverages high-performance backend enumeration engines to query massive DNS records and historical intelligence databases instantly.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-        </div>
-        <h3>Secure Serverless Architecture</h3>
-        <p>Zero API key exposure. All requests are securely proxied through Vercel Serverless Functions using encrypted environment variables.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">
-          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-        </div>
-        <h3>Attack Surface Mapping</h3>
-        <p>Discover forgotten staging servers, internal microservices, administrative portals, and exposed buckets before malicious actors do.</p>
-      </div>
+    <!-- Bottom Scan Another Site CTA -->
+    <div style="text-align: center; margin-top: 3rem;">
+      <button class="action-btn primary" onclick="newScan()" style="padding: 0.9rem 2.5rem; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.6rem; margin: 0 auto; box-shadow: 0 4px 20px rgba(0, 245, 255, 0.25);">
+        🔍 Scan Another Site
+      </button>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
-      <a href="#" class="nav-brand">
-        <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" stroke="#00F5FF" stroke-width="6"/>
-          <circle cx="50" cy="50" r="12" fill="#00F5FF"/>
-        </svg>
-        SubVision
-      </a>
+      <a href="#" class="nav-brand">SubVision</a>
       <div class="footer-links">
         <a href="https://github.com" target="_blank" rel="noopener">GitHub Repository</a>
-        <a href="#privacy">Privacy Policy</a>
-        <a href="#terms">Terms of Service</a>
-        <a href="https://rapidapi.com" target="_blank" rel="noopener">RapidAPI Docs</a>
-        <a href="#status">System Status</a>
       </div>
     </div>
     <div class="footer-bottom">
       <div>&copy; 2035 SubVision Cyber Intelligence. All rights reserved.</div>
-      <div>Made with ❤️ for Security Professionals &amp; Penetration Testers</div>
     </div>
   </footer>
 
-  <!-- JavaScript -->
+  <!-- Legal Disclaimer Modal -->
+  <div class="modal-backdrop" id="disclaimerModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>⚠️ Authorization & Usage Disclaimer</h3>
+      </div>
+      <div class="modal-body">
+        <p>SubVision is an enterprise cyber intelligence and reconnaissance utility intended exclusively for authorized security testing, educational research, and auditing assets you own or have explicit written permission to test.</p>
+        <p>Unauthorized reconnaissance against external infrastructure without consent may violate local or international computer crime laws. By proceeding, you certify compliance with all applicable regulations and API terms.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="action-btn primary" id="acceptDisclaimerBtn" style="width: 100%; justify-content: center;">Accept & Continue</button>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
