@@ -1,0 +1,12 @@
+{
+  "name": "subvision",
+  "version": "1.0.0",
+  "description": "Next-Generation Futuristic Cybersecurity Subdomain Discovery Platform",
+  "private": true,
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "devDependencies": {
+    "vercel": "^34.0.0"
+  }
+}
