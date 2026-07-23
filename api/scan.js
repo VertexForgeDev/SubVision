@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid domain format supplied.' });
   }
 
-  const apiKey = process.env.RAPIDAPI_KEY;
+  const apiKey = process.env.RAPIDAPI;
   if (!apiKey) {
     return res.status(500).json({ error: 'Server configuration error: RAPIDAPI_KEY missing.' });
   }
