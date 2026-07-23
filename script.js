@@ -1,3 +1,13 @@
+// Bulletproof Global Disclaimer Handler
+window.acceptDisclaimer = function() {
+  localStorage.setItem('subvision_disclaimer_accepted', 'true');
+  const modal = document.getElementById('disclaimerModal');
+  if (modal) {
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+  }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   const searchForm = document.getElementById('searchForm');
   const domainInput = document.getElementById('domainInput');
@@ -15,37 +25,69 @@ document.addEventListener('DOMContentLoaded', () => {
   const statHttps = document.getElementById('statHttps');
   const statHttp = document.getElementById('statHttp');
   const statDuration = document.getElementById('statDuration');
-  const statLatency = document.getElementById('statLatency');
 
-  // Search & Filter elements
-  const resultsSearch = document.getElementById('resultsSearch');
-  const filterTabs = document.querySelectorAll('.filter-tab');
+  // Disclaimer Modal Elements
+  const disclaimerModal = document.getElementById('disclaimerModal');
+  const acceptDisclaimerBtn = document.getElementById('acceptDisclaimerBtn');
+  
+  let lastScanTimestamp = 0;
+  const SCAN_COOLDOWN_MS = 5000;
+
+  // Initial Modal Check
+  if (disclaimerModal) {
+    if (!localStorage.getItem('subvision_disclaimer_accepted')) {
+      disclaimerModal.classList.add('active');
+      disclaimerModal.style.display = 'flex';
+    } else {
+      disclaimerModal.classList.remove('active');
+      disclaimerModal.style.display = 'none';
+    }
+  }
+
+  if (acceptDisclaimerBtn) {
+    acceptDisclaimerBtn.addEventListener('click', () => {
+      window.acceptDisclaimer();
+    });
+  }
 
   let currentScanData = null;
-  let activeFilter = 'all';
 
   // Quick tags click handler
   document.querySelectorAll('.domain-tag').forEach(tag => {
     tag.addEventListener('click', () => {
-      domainInput.value = tag.dataset.domain;
-      domainInput.focus();
+      if (domainInput) {
+        domainInput.value = tag.dataset.domain;
+        domainInput.focus();
+      }
     });
   });
 
-  // Form Submission
-  searchForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const rawInput = domainInput.value;
-    const sanitizedDomain = sanitizeDomain(rawInput);
+  // Form Submission with Rate Limiting
+  if (searchForm) {
+    searchForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!domainInput) return;
 
-    if (!validateDomain(sanitizedDomain)) {
-      showError('Please enter a valid target domain (e.g., example.com)');
-      return;
-    }
+      const now = Date.now();
+      if (now - lastScanTimestamp < SCAN_COOLDOWN_MS) {
+        const remainingSecs = Math.ceil((SCAN_COOLDOWN_MS - (now - lastScanTimestamp)) / 1000);
+        showError(`Rate limit safeguard: Please wait ${remainingSecs}s before initiating another scan.`);
+        return;
+      }
 
-    hideError();
-    await executeScan(sanitizedDomain);
-  });
+      const rawInput = domainInput.value;
+      const sanitizedDomain = sanitizeDomain(rawInput);
+
+      if (!validateDomain(sanitizedDomain)) {
+        showError('Please enter a valid target domain (e.g., example.com)');
+        return;
+      }
+
+      hideError();
+      lastScanTimestamp = now;
+      await executeScan(sanitizedDomain);
+    });
+  }
 
   function sanitizeDomain(input) {
     let clean = input.trim().toLowerCase();
@@ -61,17 +103,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showError(msg) {
-    validationError.textContent = msg;
-    validationError.style.display = 'block';
-    domainInput.style.borderColor = 'var(--color-danger)';
+    if (validationError) {
+      validationError.textContent = msg;
+      validationError.style.display = 'block';
+    }
+    if (domainInput) {
+      domainInput.style.borderColor = 'var(--color-danger)';
+    }
   }
 
   function hideError() {
-    validationError.style.display = 'none';
-    domainInput.style.borderColor = 'var(--card-border)';
+    if (validationError) {
+      validationError.style.display = 'none';
+    }
+    if (domainInput) {
+      domainInput.style.borderColor = 'var(--card-border)';
+    }
   }
 
-  // Rotating scanning messages
   const scanningMessages = [
     'Scanning infrastructure topology...',
     'Collecting deep cyber intelligence...',
@@ -82,15 +131,17 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   async function executeScan(domain) {
-    // Hide Hero, Show Scanning
-    heroSection.style.display = 'none';
-    dashboardSection.classList.remove('active');
-    scanningOverlay.classList.add('active');
+    if (heroSection) heroSection.style.display = 'none';
+    if (dashboardSection) dashboardSection.classList.remove('active');
+    if (scanningOverlay) scanningOverlay.classList.add('active');
 
     let msgIndex = 0;
+    const scanningStatusText = document.getElementById('scanningStatusText');
     const msgInterval = setInterval(() => {
       msgIndex = (msgIndex + 1) % scanningMessages.length;
-      document.getElementById('scanningStatusText').textContent = scanningMessages[msgIndex];
+      if (scanningStatusText) {
+        scanningStatusText.textContent = scanningMessages[msgIndex];
+      }
     }, 1200);
 
     const startTime = Date.now();
@@ -100,14 +151,23 @@ document.addEventListener('DOMContentLoaded', () => {
       clearInterval(msgInterval);
 
       if (!response.ok) {
-        const errJson = await response.json().catch(() => ({}));
-        throw new Error(errJson.error || `Server responded with status ${response.status}`);
+        let errorMsg = `Server responded with status ${response.status}`;
+        try {
+          const errJson = await response.json();
+          if (errJson && errJson.error) {
+            errorMsg = errJson.error;
+          }
+        } catch (err) {
+          if (response.status === 404) {
+            errorMsg = 'API endpoint (/api/scan) not found. Ensure serverless functions are active.';
+          }
+        }
+        throw new Error(errorMsg);
       }
 
       const data = await response.json();
       currentScanData = data;
 
-      // Simulate a sleek futuristic delay for immersion
       const elapsed = Date.now() - startTime;
       const minDelay = 1500;
       if (elapsed < minDelay) {
@@ -117,22 +177,22 @@ document.addEventListener('DOMContentLoaded', () => {
       renderDashboard(data);
     } catch (err) {
       clearInterval(msgInterval);
-      scanningOverlay.classList.remove('active');
-      heroSection.style.display = 'flex';
+      if (scanningOverlay) scanningOverlay.classList.remove('active');
+      if (heroSection) heroSection.style.display = 'flex';
       showError(err.message || 'Scan failed. Please verify the domain and try again.');
       showToast('Scan Error: ' + err.message, 'danger');
     }
   }
 
   function renderDashboard(data) {
-    scanningOverlay.classList.remove('active');
-    dashboardSection.classList.add('active');
+    if (scanningOverlay) scanningOverlay.classList.remove('active');
+    if (dashboardSection) dashboardSection.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     const domain = data.domain || 'Target';
-    targetDomainTitle.textContent = `🛰️ ${domain}`;
-    targetDomainSubtitle.textContent = `Scanned at ${new Date(data.scannedAt).toLocaleString()} via Secure Serverless Proxy`;
+    if (targetDomainTitle) targetDomainTitle.textContent = `🛰️ ${domain}`;
+    if (targetDomainSubtitle) targetDomainSubtitle.textContent = `Scanned at ${new Date(data.scannedAt).toLocaleString()} via Secure Serverless Proxy`;
 
-    // Handle results format from API
     let subdomains = [];
     if (Array.isArray(data.results)) {
       subdomains = data.results;
@@ -142,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
       subdomains = Object.values(data.results).flat();
     }
 
-    // Calculate stats
     const total = subdomains.length;
     let httpsCount = 0;
     let httpCount = 0;
@@ -161,23 +220,18 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     });
 
-    statTotal.textContent = total;
-    statHttps.textContent = httpsCount;
-    statHttp.textContent = httpCount;
-    statDuration.textContent = `${((Date.now() - new Date(data.scannedAt).getTime()) / 1000).toFixed(1)}s`;
-    statLatency.textContent = `${data.latencyMs || 240}ms`;
+    if (statTotal) statTotal.textContent = total;
+    if (statHttps) statHttps.textContent = httpsCount;
+    if (statHttp) statHttp.textContent = httpCount;
+    if (statDuration) statDuration.textContent = `${((Date.now() - new Date(data.scannedAt).getTime()) / 1000).toFixed(1)}s`;
 
-    // Populate table
     populateTable(formattedSubdomains);
-
-    // Populate JSON console
-    jsonOutput.textContent = JSON.stringify(data, null, 2);
-
-    // Save search history in local storage
+    if (jsonOutput) jsonOutput.textContent = JSON.stringify(data, null, 2);
     saveRecentSearch(domain, total);
   }
 
   function populateTable(subdomains) {
+    if (!subTableBody) return;
     subTableBody.innerHTML = '';
 
     if (subdomains.length === 0) {
@@ -211,7 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
 
-  // Toast notification helper
   window.showToast = function(message, type = 'success') {
     let container = document.getElementById('toastContainer');
     if (!container) {
@@ -241,12 +294,14 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('subvision_history', JSON.stringify(history));
   }
 
-  // Global Action Handlers for Dashboard Buttons
   window.newScan = function() {
-    dashboardSection.classList.remove('active');
-    heroSection.style.display = 'flex';
-    domainInput.value = '';
-    domainInput.focus();
+    if (dashboardSection) dashboardSection.classList.remove('active');
+    if (heroSection) heroSection.style.display = 'flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (domainInput) {
+      domainInput.value = '';
+      domainInput.focus();
+    }
   };
 
   window.copyAllJSON = function() {
@@ -289,11 +344,10 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('CSV report exported successfully!');
   };
 
-  // Keyboard shortcut '/' to focus search
   window.addEventListener('keydown', (e) => {
     if (e.key === '/' && document.activeElement !== domainInput) {
       e.preventDefault();
-      domainInput.focus();
+      if (domainInput) domainInput.focus();
     }
   });
 });
