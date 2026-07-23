@@ -66,9 +66,11 @@ export default async function handler(req, res) {
       results: data
     };
 
-    return.status(200).json(enrichedResponse);
+    // FIXED: changed from return.status to res.status
+    return res.status(200).json(enrichedResponse);
   } catch (error) {
-    return.status(500).json({ 
+    // FIXED: changed from return.status to res.status
+    return res.status(500).json({ 
       error: 'Failed to communicate with intelligence network.', 
       details: error.message 
     });
