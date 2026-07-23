@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const domain = data.domain || 'Target';
     targetDomainTitle.textContent = `🛰️ ${domain}`;
-    targetDomainSubtitle.textContent = `Scanned at ${new Date(data.scannedAt).toLocaletoLocaleString()} via Secure Serverless Proxy`;
+    targetDomainSubtitle.textContent = `Scanned at ${new Date(data.scannedAt).toLocaleString()} via Secure Serverless Proxy`;
 
     // Handle results format from API
     let subdomains = [];
@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (data.results && Array.isArray(data.results.subdomains)) {
       subdomains = data.results.subdomains;
     } else if (data.results && typeof data.results === 'object') {
-      // If object, extract values or keys
       subdomains = Object.values(data.results).flat();
     }
 
@@ -150,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const formattedSubdomains = subdomains.map(item => {
       let subStr = typeof item === 'string' ? item : (item.subdomain || item.domain || JSON.stringify(item));
-      // Normalize if string or object
       let isHttps = subStr.startsWith('https://') || (item.protocol === 'https');
       if (isHttps) httpsCount++; else httpCount++;
 
